@@ -12,7 +12,8 @@
 CC=/usr/bin/gcc
 
 # install necessary software for lucid
-apt-get update && apt-get install gzip liblz0 postgresql-8.4 php5-geoip postgresql-8.4-postgis postgis postgresql-contrib-8.4
+apt-get update && apt-get install gzip liblz0 postgresql-8.4 php5-geoip postgresql-8.4-postgis postgis postgresql-contrib-8.4 libzip1 libzip-dev
+# ZLIB will give problems , you'll need to hack the latest one in , seems to work but it 's not for newbees
 
 # (dpkg does all that for us, just need to reload php-fpm or apache for it to work)
 # pecl install geoip

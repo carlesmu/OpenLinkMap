@@ -7,38 +7,48 @@
 
 
 # working directory, please change
-cd ~/import
-PATH="$PATH:/home/www/sites/194.245.35.149/site/import/bin"
+cd /usr/local/src/osm
+PATH="$PATH:/var/www/openlinkmap/OpenLinkMap/import/bin"
 export JAVACMD_OPTIONS=-Xmx2800M
 
 
 # download planet file, ~ 8 hours
-echo "Downloading planet file"
-echo ""
-wget http://planet.openstreetmap.org/pbf/planet-latest.osm.pbf
-mv planet-latest.osm.pbf old.pbf
-echo ""
+#echo "Downloading planet file"
+#echo ""
+#wget http://planet.openstreetmap.org/pbf/planet-latest.osm.pbf
+#mv planet-latest.osm.pbf old.pbf
+#echo ""
+
+# download benelux 
+if [ ! -f old.pbf ]; then
+   echo "Downloading belgium file"
+   echo ""
+   wget http://planet.openstreetmap.nl/benelux/planet-benelux-130304.osm.pbf
+   mv planet-benelux-130304.osm.pbf old.pbf
+   echo ""
+fi
+
+## update planet file
+#echo "Updating planet file"
+#echo ""
+#date -u +%s > timestamp
+#osmupdate old.pbf new.pbf --max-merge=2 --hourly --drop-author -v
+#rm old.pbf
+#mv new.pbf old.pbf
+#echo ""
 
 
-# update planet file
-echo "Updating planet file"
-echo ""
-date -u +%s > timestamp
-osmupdate old.pbf new.pbf --max-merge=2 --hourly --drop-author -v
-rm old.pbf
-mv new.pbf old.pbf
-echo ""
-
-
-# convert planet file, ~ 25 min
-echo "Converting planet file"
-echo ""
-osmconvert old.pbf --drop-relations --out-o5m >temp.o5m
-echo ""
+if [ ! -f temp.o5m ]; then
+   # convert planet file, ~ 25 min
+   echo "Converting  file"
+   echo ""
+   osmconvert old.pbf --drop-relations --drop-version --drop-author --out-o5m >temp.o5m
+   echo ""
+fi
 
 
 # filter planet file, ~ 35 min
-echo "Filtering planet file"
+echo "Filtering file"
 echo ""
 osmfilter temp.o5m --keep="wikipedia= wikipedia:*= contact:phone= website= url= phone= fax= email= addr:email= image= url:official= contact:website= addr:phone= phone:mobile= contact:mobile= addr:fax= contact:email= contact:fax= image:panorama= opening_hours=" --out-o5m >temp-olm.o5m
 
