@@ -13,8 +13,7 @@
 # debian version by Carles Muñoz, based in Ubuntu Lucid (32/64 bit) version by 
 # glenn byte-consult be
 
-#
-# TODO: use geoip-database-contrib 
+# Yo shoud this scrip as run it as root :(
 
 CC=/usr/bin/gcc
 
@@ -25,15 +24,10 @@ GEOIP_DIR="/usr/local/share/GeoIP"
 POSTGRESQL_VER="9.1"
 POSTGIS_VER="1.5"
 
-# SOME VARIABLES
-OK=true
-CUR_DIR=`pwd`
-err=""
-
 # install necessary software for debian
 echo "Installing necessary software… "
-[ "$OK" ] || apt-get update || exit $? 
-[ "$OK" ] || apt-get install gzip php5-geoip postgis libzip-dev liblz-dev gcc \
+apt-get update || exit $? 
+apt-get install gzip php5-geoip postgis libzip-dev liblz-dev gcc \
     postgresql-contrib-${POSTGRESQL_VER} postgresql-${POSTGRESQL_VER}-postgis \
     || exit $?
 
@@ -63,24 +57,24 @@ rm -Rf $GEOIP_DIR/GeoLiteCity.dat.g*
 
 # Since they seem to block based on user agents of curl/wget, keep them happy 
 # with some mac user agent, if not you will get 404 country
-[ "$OK" ] || wget --user-agent="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_6_8) AppleWebKit/534.30 (KHTML, like Gecko) Chrome/12.0.742.112 Safari/534.30" \
+wget --user-agent="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_6_8) AppleWebKit/534.30 (KHTML, like Gecko) Chrome/12.0.742.112 Safari/534.30" \
     http://geolite.maxmind.com/download/geoip/database/GeoLiteCountry/GeoIP.dat.gz \
     --directory-prefix=$GEOIP_DIR \
     || exit $?
-[ "$OK" ] || gunzip GeoIP.dat.gz || exit $?
+gunzip GeoIP.dat.gz || exit $?
 
 # cities
-[ "$OK" ] || wget --user-agent="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_6_8) AppleWebKit/534.30 (KHTML, like Gecko) Chrome/12.0.742.112 Safari/534.30"  \
+wget --user-agent="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_6_8) AppleWebKit/534.30 (KHTML, like Gecko) Chrome/12.0.742.112 Safari/534.30"  \
     http://geolite.maxmind.com/download/geoip/database/GeoLiteCity.dat.gz |
     --directory-prefix=$GEOIP_DIR \
     || exit $?
-[ "$OK" ] || gunzip GeoLiteCity.dat.gz || exit $?
-[ "$OK" ] || mv -f GeoLiteCity.dat GeoIPCity.dat || exit $?
+gunzip GeoLiteCity.dat.gz || exit $?
+mv -f GeoLiteCity.dat GeoIPCity.dat || exit $?
 
 echo "Compiling tools … "
-[ "$OK" ] || wget -O - http://m.m.i24.cc/osmupdate.c | $CC -x c - -o osmupdate || exit $? 
-[ "$OK" ] || wget -O - http://m.m.i24.cc/osmfilter.c | $CC -x c - -o osmfilter || exit $? 
-[ "$OK" ] || wget -O - http://m.m.i24.cc/osmconvert.c | $CC -x c - -lz -o osmconvert || exit $? 
+wget -O - http://m.m.i24.cc/osmupdate.c | $CC -x c - -o osmupdate || exit $? 
+wget -O - http://m.m.i24.cc/osmfilter.c | $CC -x c - -o osmfilter || exit $? 
+wget -O - http://m.m.i24.cc/osmconvert.c | $CC -x c - -lz -o osmconvert || exit $? 
 
 echo "Installing osmosis … $GEOIP_DIR/osmosis"
 if [ -d $GEOIP_DIR/osmosis ] ; then
@@ -90,7 +84,7 @@ fi
 
 mkdir -p $GEOIP_DIR/osmosis
 cd $GEOIP_DIR/osmosis
-[ "$OK" ] || wget -O - http://bretth.dev.openstreetmap.org/osmosis-build/osmosis-latest.tgz | tar xz || exit $?  
+wget -O - http://bretth.dev.openstreetmap.org/osmosis-build/osmosis-latest.tgz | tar xz || exit $?  
 
 # old default
 echo -n "Checking postgis … "
