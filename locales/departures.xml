@@ -12,6 +12,7 @@
 	* AT: ÖBB
 	* BE: De Lijn
 	* DE: Deutsche Bahn
+	* ES: AMB
 -->
 
 <translations>
@@ -83,6 +84,37 @@
 		<output>
 			<copy-all/>
 			<tag from_match="uic_ref" k="departures" v="http://reiseauskunft.bahn.de/bin/bhftafel.exe/dn?country=DEU&amp;rt=1&amp;use_realtime_filter=1&amp;productsFilter=1111111111000000&amp;boardType=Abfahrt&amp;start=Suchen&amp;input={0}"/>
+		</output>
+	</translation>
+	<translation>
+		<name>AMB</name>
+		<description>Timetables for bus stations operated in the Barcelona Metropolitan Aream "Àrea Metropolitana de Barcelona (AMB)".</description>
+		<match mode="and">
+			<match mode="or">
+				<tag k="highway" v="bus_stop"/>
+		 		<tag k="public_transport" v="platform"/>
+				<tag k="public_transport" v="stop_position"/>
+			</match>
+			<match mode="or">
+				<tag k="operator" v="(.*;|^)AMB(;.*|$)"/>
+				<tag k="operator" v="(.*;|^)ATM(;.*|$)"/>
+				<tag k="operator" v="(.*;|^)TUSGSAL(;.*|$)"/>
+				<tag k="operator" v="(.*;|^)TCC2(;.*|$)"/>
+				<tag k="operator" v="(.*;|^)SOLER i SAURET(;.*|$)"/>
+				<tag k="operator" v="(.*;|^)SGMT(;.*|$)"/>
+				<tag k="operator" v="(.*;|^)ROSANBUS(;.*|$)"/>
+				<tag k="operator" v="(.*;|^)OLIVERAS(;.*|$)"/>
+				<tag k="operator" v="(.*;|^)MOHN(;.*|$)"/>
+				<tag k="operator" v="(.*;|^)BAIXBUS(;.*|$)"/>
+				<tag k="operator" v="(.*;|^)AUTHOSA(;.*|$)"/>
+			</match>
+		</match>
+		<find>
+			<tag k="ref" v="([0-9]*)" match_id="stop_ref"/>
+		</find>
+		<output>
+			<copy-all/>
+			<tag from_match="stop_ref" k="departures" v="http://www.ambmobilitat.cat/AMBtempsbus?codi={0}"/>
 		</output>
 	</translation>
 </translations>
